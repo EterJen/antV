@@ -19,21 +19,22 @@
     nodes: [
       {
         id: 'node1',
-        type: 'circle',       // 元素的图形
-        label: '收文登记'        // 标签文字
+        // type: 'circle',       // 元素的图形
+        type: 'rect',       // 元素的图形
+        // type: 'ellipse',       // 元素的图形
+        label: '收文登记的撒谎过很多过后\n李白\n代办'        // 标签文字
         // x: 100,
         // y: 200,
       },
       {
         id: 'node2',
-        type: 'circle',       // 元素的图形
+        type: 'ellipse',       // 元素的图形
         label: '领导审批',        // 标签文字
         visible: true,        // 控制初次渲染显示与隐藏，若为 false，代表隐藏。默认不隐藏
         labelCfg: {           // 标签配置属性
           positions: 'center',// 标签的属性，标签在元素中的位置
           style: {            // 包裹标签样式属性的字段 style 与标签其他属性在数据结构上并行
             fontSize: 15,      // 标签的样式属性，文字字体大小
-            fontcolor:'red'
             // ...            // 标签的其他样式属性
           }
         }
@@ -47,23 +48,114 @@
       {
         source: 'node1',
         target: 'node2',
+
+        label: '流转',        // 标签文字
       },
+
     ],
   };
 
+
+  const minimap = new G6.Minimap({
+    size: [100, 100],
+    className: 'minimap',
+    type: 'delegate',
+  });
   // 创建 G6 图实例
   const graph = new G6.Graph({
     container: 'mountNode', // 指定图画布的容器 id，与第 9 行的容器对应
     // 画布宽高
     width: 800,
     height: 500,
+    plugins: [minimap], // 配置 imageMinimap 插件
     fitView: true,
     fitViewPadding: [20, 40, 50, 20],
+    layout: {
+      // Object，可选，布局的方法及其配置项，默认为 random 布局。
+      // type: 'force', // 指定为力导向布局
+      preventOverlap: true, // 防止节点重叠
+      linkDistance: 200, // 指定边距离为100
+      nodeSize: 60        // 节点大小，用于算法中防止节点重叠时的碰撞检测。由于已经在上一节的元素配置中设置了每个节点的 size 属性，则不需要在此设置 nodeSize。
+    },
+    modes: {
+      default: [
+        // ...
+        {
+          type: 'tooltip', // 提示框
+          formatText(model) {
+            // 提示框文本内容
+            const text = 'label: ' + model.label + '<br/> class: ' + model.class;
+            return text;
+          },
+        },
+        {
+          type: 'edge-tooltip', // 边提示框
+          formatText(model) {
+            // 边提示框文本内容
+            const text =
+                    'source: ' +
+                    model.source +
+                    '<br/> target: ' +
+                    model.target +
+                    '<br/> weight: ' +
+                    model.weight;
+            return text;
+          },
+        },
+      ],
+    },
+    defaultNode: {
+      size: [100, 50], // 节点大小
+      // color:'red', /*边色*/
+      // ...                 // 节点的其他配置
+      // 节点样式配置
+   /*   anchorPoints: [ //节点可连线点
+        [0.5, 0],
+        [0.5, 1],
+      ],*/
+      style: {
+        fill: '#bae637',
+        stroke: '#eaff8f',
+        lineWidth: 5,
+        radius: 10,
+      },
+      // 节点上的标签文本配置
+      labelCfg: {
+        style: {
+          fill: 'black',
+          fontSize: 12,
+        },
+        // position: 'top',
+      },
+    },
+    // 边在默认状态下的样式配置（style）和其他配置
+    defaultEdge: {
+      // ...                 // 边的其他配置
+      // 边样式配置
+      // type: 'quadratic',
+      type: 'line-with-arrow',
+      style: {
+        opacity: 0.6, // 边透明度
+        stroke: 'grey', // 边描边颜色
+      },
+      // visible: true,        // 控制初次渲染显示与隐藏，若为 false，代表隐藏。默认不隐藏
+      sourceAnchor: 1,
+      // 该边连入 source 点的第 1 个 anchorPoint，
+      targetAnchor: 1,
+      style: {
+        endArrow: true,
+      },
+      // 边上的标签文本配置
+      labelCfg: {
+        autoRotate: true, // 边上的标签文本根据边的方向旋转
+      },
+    },
   });
   // 读取数据
   graph.data(data);
   // 渲染图
   graph.render();
+
 </script>
 </body>
 </html>
