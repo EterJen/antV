@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tutorial Demo</title>
+</head>
+<body>
+/* 图的画布容器 */
+<div id="mountNode" style="border: 1px  solid black"></div>
+
+/* 引入 G6 */
+<!--<script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-3.7.1/dist/g6.min.js"></script>-->
+<script src="g6.min.js"></script>
+
+<script>
+  // 定义数据源
+  const data = {
+    // 点集
+    nodes: [
+      {
+        id: 'node1',
+        type: 'circle',       // 元素的图形
+        label: '收文登记'        // 标签文字
+        // x: 100,
+        // y: 200,
+      },
+      {
+        id: 'node2',
+        type: 'circle',       // 元素的图形
+        label: '领导审批',        // 标签文字
+        visible: true,        // 控制初次渲染显示与隐藏，若为 false，代表隐藏。默认不隐藏
+        labelCfg: {           // 标签配置属性
+          positions: 'center',// 标签的属性，标签在元素中的位置
+          style: {            // 包裹标签样式属性的字段 style 与标签其他属性在数据结构上并行
+            fontSize: 15,      // 标签的样式属性，文字字体大小
+            fontcolor:'red'
+            // ...            // 标签的其他样式属性
+          }
+        }
+        // x: 300,
+        // y: 200,
+      },
+    ],
+    // 边集
+    edges: [
+      // 表示一条从 node1 节点连接到 node2 节点的边
+      {
+        source: 'node1',
+        target: 'node2',
+      },
+    ],
+  };
+
+  // 创建 G6 图实例
+  const graph = new G6.Graph({
+    container: 'mountNode', // 指定图画布的容器 id，与第 9 行的容器对应
+    // 画布宽高
+    width: 800,
+    height: 500,
+    fitView: true,
+    fitViewPadding: [20, 40, 50, 20],
+  });
+  // 读取数据
+  graph.data(data);
+  // 渲染图
+  graph.render();
+</script>
+</body>
+</html>
